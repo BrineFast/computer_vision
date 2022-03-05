@@ -6,7 +6,7 @@ import os
 from matplotlib import pyplot as plt
 
 
-def get_avg(img: object, left_bound: int, right_bound: int, bottom_bound: int, top_bound: int):
+def get_avg(img: object, left_bound: int, right_bound: int, bottom_bound: int, top_bound: int) -> int:
     gray_image: np.array = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     cropped_gray_image: np.array = gray_image[bottom_bound:top_bound, left_bound:right_bound]
     height, width = cropped_gray_image.shape

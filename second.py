@@ -23,7 +23,7 @@ def _modify_brightness(pixels: np.array, delta: float) -> np.array:
     return pixels
 
 
-def modify_saturation(image_name: str, ratio: float = 1.2) -> NoReturn:
+def saturation(image_name: str, ratio: float = 1.2) -> NoReturn:
     bgr_image: np.array = cv2.imread(os.path.join(data_dir, image_name), 1)
     lab_image: np.array = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2LAB)
 
@@ -40,7 +40,7 @@ def modify_saturation(image_name: str, ratio: float = 1.2) -> NoReturn:
     cv2.imwrite(modifyed_image, res)
 
 
-def modify_brightness(image_name: str, delta: float = 30) -> NoReturn:
+def brightness(image_name: str, delta: float = 30) -> NoReturn:
     image: np.array = cv2.imread(os.path.join(data_dir, image_name), 1)
     lab_image: np.array = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
 
@@ -59,5 +59,5 @@ def modify_brightness(image_name: str, delta: float = 30) -> NoReturn:
 
 if __name__ == "__main__":
     for filename in os.listdir(data_dir):
-        modify_saturation(filename)
-        modify_brightness(filename)
+        saturation(filename)
+        brightness(filename)

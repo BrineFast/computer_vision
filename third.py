@@ -7,11 +7,11 @@ from typing import NoReturn
 data_dir: str = 'photos/third/'
 
 
-def equ_hist(image_name: str) -> NoReturn:
+def histogram(image_name: str) -> NoReturn:
     image: np.array = cv2.imread(os.path.join(data_dir, image_name))
     image_yuv: np.array = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
     image_yuv[:, :, 0] = cv2.equalizeHist(image_yuv[:, :, 0])
-    modifyed_image: str = f"equ_hist_{image_name}"
+    modifyed_image: str = f"histogram_{image_name}"
 
     cv2.imwrite(modifyed_image,
                 cv2.cvtColor(image_yuv, cv2.COLOR_YUV2BGR))
@@ -29,7 +29,7 @@ def clahe(image_name: str) -> NoReturn:
                 cv2.cvtColor(image_yuv, cv2.COLOR_YUV2BGR))
 
 
-def gaussian_blur(image_name: str) -> NoReturn:
+def blur(image_name: str) -> NoReturn:
     image: np.array = cv2.imread(os.path.join(data_dir, image_name))
     modifyed_image: str = f"gaussian_blur_{image_name}"
 
@@ -37,21 +37,23 @@ def gaussian_blur(image_name: str) -> NoReturn:
                 cv2.GaussianBlur(image, (21, 21), sigmaX=0))
 
 
-def sobel_x(image_name: str) -> NoReturn:
-    image: np.array = cv2.imread(os.path.join(data_dir, image_name), 0)
-    modifyed_image: str = f"sobel_x_{image_name}"
+def _sobel_deriv_x(image_name: str, image: np.array) -> NoReturn:
+    modifyed_image: str = f"obel_deriv_x_{image_name}"
 
     cv2.imwrite(modifyed_image,
                 cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=5))
 
 
-def sobel_y(image_name: str) -> NoReturn:
-    image: np.array = cv2.imread(os.path.join(data_dir, image_name), 0)
-    modifyed_image: str = f"sobel_y_{image_name}"
+def _sobel_deriv_y(image_name: str, image: np.array) -> NoReturn:
+    modifyed_image: str = f"obel_deriv_y_{image_name}"
 
     cv2.imwrite(modifyed_image,
                 cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=5))
 
+def sobel(image_name: str) -> NoReturn:
+    image: np.array = cv2.imread(os.path.join(data_dir, image_name), 0)
+    _sobel_deriv_x(image_name, image)
+    _sobel_deriv_y(image_name, image)
 
 def laplas(image_name: str) -> NoReturn:
     image: np.array = cv2.imread(os.path.join(data_dir, image_name), 0)
@@ -103,8 +105,8 @@ def pyramid_blending(first_image_name: str, second_image_name: str) -> NoReturn:
     direct_blending: np.array = np.hstack((first_image[:, :int(merged_pyr[15].shape[1] / 2)],
                                            second_image[:, int(merged_pyr[15].shape[1] / 2):]))
 
-    cv2.imwrite('results/third/pyramid_blending.jpg', blending)
-    cv2.imwrite('results/third/direct_blending.jpg', direct_blending)
+    cv2.imwrite('pyramid_blending.jpg', blending)
+    cv2.imwrite('direct_blending.jpg', direct_blending)
 
 
 def alpha_blending(foreground_image: str, background_image: str, alpha_mask_image: str) -> NoReturn:
@@ -115,7 +117,7 @@ def alpha_blending(foreground_image: str, background_image: str, alpha_mask_imag
     foreground = cv2.multiply(alpha / 255, foreground)
     background = cv2.multiply(1.0 - alpha / 255, background)
 
-    cv2.imwrite("results/third/alpha_blending.jpg",
+    cv2.imwrite("alpha_blending.jpg",
                 cv2.add(foreground, background))
 
 
@@ -123,17 +125,10 @@ if __name__ == "__main__":
     images: list = os.listdir(data_dir)
 
     for i in range(len(images) - 2):
-        equ_hist(images[i])
-        equ_hist(images[i])
-
+        histogram(images[i])
         clahe(images[i])
-        clahe(images[i])
-
-        gaussian_blur(images[i])
-        gaussian_blur(images[i])
-
-        sobel_x(images[i])
-        sobel_y(images[i])
+        blur(images[i])
+        sobel(images[i])
         laplas(images[i])
 
         pyramid_blending(images[i], images[i + 1])

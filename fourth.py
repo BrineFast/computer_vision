@@ -15,8 +15,8 @@ def haar(image_name: str) -> NoReturn:
         cv2.rectangle(image,
                       (face[0], face[1]),
                       (face[0] + face[2], face[1] + face[3]),
-                      (255, 0, 0),
-                      2)
+                      (200, 255, 100),
+                      3)
 
     cv2.imwrite(f"haar_{image_name}", image)
 
