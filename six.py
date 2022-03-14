@@ -126,7 +126,7 @@ class Model():
                 img_class: str = self._mapping[torch.argmax(i).item()]
                 plt.figure(path_num)
                 plt.title(img_class)
-                plt.imshow(cv2.cvtColor(cv2.imread(test_ds.dataset._filenames[path_num], cv2.COLOR_BGR2RGB)))
+                plt.imshow(cv2.cvtColor(cv2.imread(test_ds.dataset._filenames[path_num]), cv2.COLOR_BGR2RGB))
                 plt.savefig(f"classified_{img_class}_{path_num}")
                 path_num += 1
         plt.show()
@@ -163,7 +163,7 @@ class Model():
         optimizer.step()
 
 if __name__ == "__main__":
-    rec_model: Model = Model(train_path)
-    rec_model.train(50)
+    model: Model = Model(train_path)
+    model.train(50)
 
-    rec_model.test(10, test_path)
+    model.test(10, test_path)
